@@ -1,5 +1,8 @@
 package com.abaiyat.triagews.security;
 
+import com.abaiyat.triagews.SpringApplicationContext;
+import com.abaiyat.triagews.service.UserService;
+import com.abaiyat.triagews.shared.dto.UserDto;
 import com.abaiyat.triagews.ui.model.request.UserLoginRequestModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
@@ -59,6 +62,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
                 .compact();
 
+        UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
+        UserDto userDto = userService.getUser(userName);
         res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+        res.addHeader("UserID", userDto.getUserId());
     }
 }

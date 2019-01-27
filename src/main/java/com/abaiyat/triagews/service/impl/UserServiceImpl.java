@@ -48,6 +48,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto getUser(String email) {
+        UserModel userModel = userRepository.findByEmail(email);
+
+        if (userModel == null) throw new UsernameNotFoundException(email);
+
+        UserDto returnValue = new UserDto();
+        BeanUtils.copyProperties(userModel, returnValue);
+        return returnValue;
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserModel userModel = userRepository.findByEmail(email);
 
