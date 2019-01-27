@@ -4,6 +4,8 @@ public class UserLoginRequestModel {
     private String email;
     private String password;
 
+    public UserLoginRequestModel() {}
+
     public UserLoginRequestModel(String username, String password) {
         this.email = username;
         this.password = password;
