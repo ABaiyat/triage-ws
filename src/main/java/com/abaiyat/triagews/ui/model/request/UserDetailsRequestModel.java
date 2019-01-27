@@ -1,32 +1,19 @@
-package com.abaiyat.triagews.model;
+package com.abaiyat.triagews.ui.model.request;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document(collection = "Users")
-public class User {
-
-    @Id
-    private String id;
-
+public class UserDetailsRequestModel {
     private String name;
     private String username;
     private String email;
     private String password;
 
-    public User(String name, String username, String email, String password) {
+    public UserDetailsRequestModel() {
+    }
+
+    public UserDetailsRequestModel(String name, String username, String email, String password) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {

@@ -1,21 +1,44 @@
-package com.abaiyat.triagews.shared.dto;
+package com.abaiyat.triagews.model;
 
-public class UserDto {
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "Users")
+public class UserModel {
+
+    @Id
     private String id;
     private String userId;
     private String name;
     private String username;
     private String email;
     private String encryptedPassword;
-    private String password;
 
-    public String getId() { return id; }
+    public UserModel() {
+    }
 
-    public void setId(String id) { this.id = id; }
+    public UserModel(String name, String username, String email, String encryptedPassword) {
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.encryptedPassword = encryptedPassword;
+    }
 
-    public String getUserId() { return userId; }
+    public String getId() {
+        return id;
+    }
 
-    public void setUserId(String userId) { this.userId = userId; }
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getName() {
         return name;
@@ -47,13 +70,5 @@ public class UserDto {
 
     public void setEncryptedPassword(String encryptedPassword) {
         this.encryptedPassword = encryptedPassword;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }
