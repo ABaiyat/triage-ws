@@ -1,4 +1,4 @@
-package com.abaiyat.triagews.UserDto;
+package com.abaiyat.triagews.shared.dto;
 
 public class UserDto {
     private String id;
