@@ -1,10 +1,12 @@
 package com.abaiyat.triagews.service.impl;
 
+import com.abaiyat.triagews.exceptions.UserServiceException;
 import com.abaiyat.triagews.model.UserModel;
 import com.abaiyat.triagews.repository.UserRepository;
 import com.abaiyat.triagews.service.UserService;
 import com.abaiyat.triagews.shared.dto.UserDto;
 import com.abaiyat.triagews.shared.dto.Utils;
+import com.abaiyat.triagews.ui.model.response.ErrorMessages;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -70,12 +72,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserByUserId(String userId) {
         UserDto returnValue = new UserDto();
-
         UserModel user = userRepository.findByUserId(userId);
 
         if (user == null) throw new UsernameNotFoundException(userId);
 
         BeanUtils.copyProperties(user, returnValue);
+        return returnValue;
+    }
+
+    @Override
+    public UserDto updateUser(String userId, UserDto user) {
+        UserDto returnValue = new UserDto();
+        UserModel userModel = userRepository.findByUserId(userId);
+
+        if (userModel == null) throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+
+        userModel.setName(user.getName());
+        userModel.setUsername(user.getUsername());
+
+        UserModel updatedUserDetails = userRepository.save(userModel);
+        BeanUtils.copyProperties(updatedUserDetails, returnValue);
+
         return returnValue;
     }
 }
