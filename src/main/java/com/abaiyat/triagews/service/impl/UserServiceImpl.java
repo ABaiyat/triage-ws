@@ -9,6 +9,9 @@ import com.abaiyat.triagews.shared.dto.Utils;
 import com.abaiyat.triagews.ui.model.response.ErrorMessages;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -102,5 +106,26 @@ public class UserServiceImpl implements UserService {
         if (userModel == null) throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
 
         userRepository.delete(userModel);
+    }
+
+    @Override
+    public List<UserDto> getUsers(int page, int limit) {
+        List<UserDto> returnValue = new ArrayList<>();
+
+        if (page > 0) {
+            page -= 1;
+        }
+
+        Pageable pageableRequest = PageRequest.of(page, limit);
+        Page<UserModel> usersPage = userRepository.findAll(pageableRequest);
+        List<UserModel> users = usersPage.getContent();
+
+        for (UserModel userModel : users) {
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(userModel, userDto);
+            returnValue.add(userDto);
+        }
+
+        return returnValue;
     }
 }
