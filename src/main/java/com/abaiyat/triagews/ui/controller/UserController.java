@@ -5,6 +5,8 @@ import com.abaiyat.triagews.service.UserService;
 import com.abaiyat.triagews.shared.dto.UserDto;
 import com.abaiyat.triagews.ui.model.request.UserDetailsRequestModel;
 import com.abaiyat.triagews.ui.model.response.ErrorMessages;
+import com.abaiyat.triagews.ui.model.response.OperationStatusModel;
+import com.abaiyat.triagews.ui.model.response.RequestOperationStatus;
 import com.abaiyat.triagews.ui.model.response.UserRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +65,14 @@ public class UserController {
         return returnValue;
     }
 
-    @DeleteMapping
-    public String deleteUser() {
-        return "Delete UserModel was called!";
+    @DeleteMapping(path = "/{id}")
+    public OperationStatusModel deleteUser(@PathVariable String id) {
+        OperationStatusModel returnValue = new OperationStatusModel();
+        returnValue.setOperationName("DELETE");
+
+        userService.deleteUser(id);
+
+        returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        return returnValue;
     }
 }
