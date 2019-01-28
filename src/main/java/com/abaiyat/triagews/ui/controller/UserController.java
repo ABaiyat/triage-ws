@@ -1,8 +1,10 @@
 package com.abaiyat.triagews.ui.controller;
 
+import com.abaiyat.triagews.exceptions.UserServiceException;
 import com.abaiyat.triagews.service.UserService;
 import com.abaiyat.triagews.shared.dto.UserDto;
 import com.abaiyat.triagews.ui.model.request.UserDetailsRequestModel;
+import com.abaiyat.triagews.ui.model.response.ErrorMessages;
 import com.abaiyat.triagews.ui.model.response.UserRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +34,10 @@ public class UserController {
     }
 
     @PostMapping
-    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) {
+    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) throws Exception {
         UserRest returnValue = new UserRest();
+
+        if(userDetails.getName().isEmpty()) throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
 
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetails, userDto);
