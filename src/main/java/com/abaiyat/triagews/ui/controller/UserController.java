@@ -6,6 +6,7 @@ import com.abaiyat.triagews.ui.model.request.UserDetailsRequestModel;
 import com.abaiyat.triagews.ui.model.response.UserRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,9 +21,14 @@ public class UserController {
     }
 
 
-    @GetMapping
-    public String getUser() {
-        return "Get UserModel was called!";
+    @GetMapping(path = "/{id}")
+    public UserRest getUser(@PathVariable String id) {
+        UserRest returnValue = new UserRest();
+
+        UserDto userDto = userService.getUserByUserId(id);
+        BeanUtils.copyProperties(userDto, returnValue);
+
+        return returnValue;
     }
 
     @PostMapping
