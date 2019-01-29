@@ -3,11 +3,18 @@ package com.abaiyat.triagews;
 import com.abaiyat.triagews.security.AppProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
-public class TriageWsApplication {
+public class TriageWsApplication extends SpringBootServletInitializer {
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(TriageWsApplication.class);
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(TriageWsApplication.class, args);
