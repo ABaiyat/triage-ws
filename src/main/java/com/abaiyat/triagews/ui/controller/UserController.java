@@ -113,4 +113,20 @@ public class UserController {
 
         return returnValue;
     }
+
+    @GetMapping(path = "/{userId}/addresses/{addressId}")
+    public AddressesRest getUserAddressById(@PathVariable String userId, @PathVariable String addressId) {
+        AddressesRest returnValue = new AddressesRest();
+
+        AddressDTO addressDTO = addressesService.getAddressById(userId, addressId);
+
+        if (addressDTO != null) {
+            ModelMapper modelMapper = new ModelMapper();
+            returnValue = modelMapper.map(addressDTO, AddressesRest.class);
+        }
+
+        return returnValue;
+    }
+
+
 }
