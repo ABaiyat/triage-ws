@@ -1,12 +1,12 @@
 package com.abaiyat.triagews.repository;
 
-import com.abaiyat.triagews.model.UserModel;
+import com.abaiyat.triagews.model.UserEntity;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends PagingAndSortingRepository<UserModel, String> {
-    UserModel findByEmail(String email);
-    UserModel findByUsername(String username);
-    UserModel findByUserId(String userId);
+public interface UserRepository extends PagingAndSortingRepository<UserEntity, String> {
+    UserEntity findByEmail(String email);
+    UserEntity findByUsername(String username);
+    UserEntity findByUserId(String userId);
 }

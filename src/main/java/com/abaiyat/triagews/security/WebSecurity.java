@@ -1,9 +1,6 @@
 package com.abaiyat.triagews.security;
 
 import com.abaiyat.triagews.service.UserService;
-import com.google.common.collect.ImmutableList;
-import com.sun.javafx.collections.ImmutableObservableList;
-import com.sun.javafx.collections.UnmodifiableListSet;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

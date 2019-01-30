@@ -1,7 +1,7 @@
 package com.abaiyat.triagews.service.impl;
 
 import com.abaiyat.triagews.exceptions.UserServiceException;
-import com.abaiyat.triagews.model.UserModel;
+import com.abaiyat.triagews.model.UserEntity;
 import com.abaiyat.triagews.repository.UserRepository;
 import com.abaiyat.triagews.service.UserService;
 import com.abaiyat.triagews.shared.dto.UserDto;
@@ -41,12 +41,12 @@ public class UserServiceImpl implements UserService {
                 userRepository.findByUsername(user.getUsername()) != null) {
             throw new RuntimeException("Record Already Exists");
         }
-        UserModel userModel = new UserModel();
-        BeanUtils.copyProperties(user, userModel);
-        userModel.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userModel.setUserId(utils.generateUserId(30));
+        UserEntity userEntity = new UserEntity();
+        BeanUtils.copyProperties(user, userEntity);
+        userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userEntity.setUserId(utils.generateUserId(30));
 
-        UserModel storedUserDetails = userRepository.save(userModel);
+        UserEntity storedUserDetails = userRepository.save(userEntity);
 
         UserDto returnDto = new UserDto();
         BeanUtils.copyProperties(storedUserDetails, returnDto);
@@ -55,28 +55,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUser(String email) {
-        UserModel userModel = userRepository.findByEmail(email);
+        UserEntity userEntity = userRepository.findByEmail(email);
 
-        if (userModel == null) throw new UsernameNotFoundException(email);
+        if (userEntity == null) throw new UsernameNotFoundException(email);
 
         UserDto returnValue = new UserDto();
-        BeanUtils.copyProperties(userModel, returnValue);
+        BeanUtils.copyProperties(userEntity, returnValue);
         return returnValue;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserModel userModel = userRepository.findByEmail(email);
+        UserEntity userEntity = userRepository.findByEmail(email);
 
-        if (userModel == null) throw new UsernameNotFoundException(email);
+        if (userEntity == null) throw new UsernameNotFoundException(email);
 
-        return new User(userModel.getEmail(), userModel.getEncryptedPassword(), new ArrayList<>());
+        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
     }
 
     @Override
     public UserDto getUserByUserId(String userId) {
         UserDto returnValue = new UserDto();
-        UserModel user = userRepository.findByUserId(userId);
+        UserEntity user = userRepository.findByUserId(userId);
 
         if (user == null) throw new UsernameNotFoundException("User with ID: " + userId + " not found");
 
@@ -87,14 +87,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(String userId, UserDto user) {
         UserDto returnValue = new UserDto();
-        UserModel userModel = userRepository.findByUserId(userId);
+        UserEntity userEntity = userRepository.findByUserId(userId);
 
-        if (userModel == null) throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        if (userEntity == null) throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
 
-        userModel.setName(user.getName());
-        userModel.setUsername(user.getUsername());
+        userEntity.setName(user.getName());
+        userEntity.setUsername(user.getUsername());
 
-        UserModel updatedUserDetails = userRepository.save(userModel);
+        UserEntity updatedUserDetails = userRepository.save(userEntity);
         BeanUtils.copyProperties(updatedUserDetails, returnValue);
 
         return returnValue;
@@ -102,10 +102,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(String userId) {
-        UserModel userModel = userRepository.findByUserId(userId);
-        if (userModel == null) throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        if (userEntity == null) throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
 
-        userRepository.delete(userModel);
+        userRepository.delete(userEntity);
     }
 
     @Override
@@ -117,12 +117,12 @@ public class UserServiceImpl implements UserService {
         }
 
         Pageable pageableRequest = PageRequest.of(page, limit);
-        Page<UserModel> usersPage = userRepository.findAll(pageableRequest);
-        List<UserModel> users = usersPage.getContent();
+        Page<UserEntity> usersPage = userRepository.findAll(pageableRequest);
+        List<UserEntity> users = usersPage.getContent();
 
-        for (UserModel userModel : users) {
+        for (UserEntity userEntity : users) {
             UserDto userDto = new UserDto();
-            BeanUtils.copyProperties(userModel, userDto);
+            BeanUtils.copyProperties(userEntity, userDto);
             returnValue.add(userDto);
         }
 

@@ -1,10 +1,13 @@
 package com.abaiyat.triagews.ui.model.request;
 
+import java.util.List;
+
 public class UserDetailsRequestModel {
     private String name;
     private String username;
     private String email;
     private String password;
+    private List<AddressRequestModel> addresses;
 
     public UserDetailsRequestModel() {
     }
@@ -46,5 +49,13 @@ public class UserDetailsRequestModel {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setAddresses(List<AddressRequestModel> addresses) {
+        this.addresses = addresses;
+    }
+
+    public List<AddressRequestModel> getAddresses() {
+        return addresses;
     }
 }

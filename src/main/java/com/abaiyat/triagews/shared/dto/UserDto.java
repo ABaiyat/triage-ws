@@ -1,5 +1,7 @@
 package com.abaiyat.triagews.shared.dto;
 
+import java.util.List;
+
 public class UserDto {
     private String id;
     private String userId;
@@ -8,6 +10,15 @@ public class UserDto {
     private String email;
     private String encryptedPassword;
     private String password;
+    private List<AddressDTO> addresses;
+
+    public List<AddressDTO> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<AddressDTO> addresses) {
+        this.addresses = addresses;
+    }
 
     public String getId() { return id; }
 
