@@ -1,19 +1,19 @@
 package com.abaiyat.triagews.ui.controller;
 
 import com.abaiyat.triagews.exceptions.UserServiceException;
+import com.abaiyat.triagews.service.AddressService;
 import com.abaiyat.triagews.service.UserService;
+import com.abaiyat.triagews.shared.dto.AddressDTO;
 import com.abaiyat.triagews.shared.dto.UserDto;
 import com.abaiyat.triagews.ui.model.request.UserDetailsRequestModel;
-import com.abaiyat.triagews.ui.model.response.ErrorMessages;
-import com.abaiyat.triagews.ui.model.response.OperationStatusModel;
-import com.abaiyat.triagews.ui.model.response.RequestOperationStatus;
-import com.abaiyat.triagews.ui.model.response.UserRest;
+import com.abaiyat.triagews.ui.model.response.*;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,10 +22,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final AddressService addressesService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AddressService addressesService) {
         this.userService = userService;
+        this.addressesService = addressesService;
     }
 
 
@@ -41,15 +43,14 @@ public class UserController {
 
     @PostMapping
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) throws Exception {
-        UserRest returnValue = new UserRest();
-
-        if(userDetails.getName().isEmpty()) throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+        if (userDetails.getName().isEmpty())
+            throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
 
         ModelMapper modelMapper = new ModelMapper();
         UserDto userDto = modelMapper.map(userDetails, UserDto.class);
 
         UserDto createdUser = userService.createUser(userDto);
-        returnValue = modelMapper.map(createdUser, UserRest.class);
+        UserRest returnValue = modelMapper.map(createdUser, UserRest.class);
 
         return returnValue;
     }
@@ -58,7 +59,8 @@ public class UserController {
     public UserRest updateUser(@PathVariable String id, @RequestBody UserDetailsRequestModel userDetails) {
         UserRest returnValue = new UserRest();
 
-        if(userDetails.getName().isEmpty()) throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+        if (userDetails.getName().isEmpty())
+            throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
 
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetails, userDto);
@@ -81,8 +83,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserRest> getUsers(@RequestParam(value="page", defaultValue="0") int page,
-                                   @RequestParam(value="limit", defaultValue="25") int limit) {
+    public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
+                                   @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<UserRest> returnValue = new ArrayList<>();
 
         List<UserDto> users = userService.getUsers(page, limit);
@@ -91,6 +93,22 @@ public class UserController {
             UserRest userModel = new UserRest();
             BeanUtils.copyProperties(userDto, userModel);
             returnValue.add(userModel);
+        }
+
+        return returnValue;
+    }
+
+
+    @GetMapping(path = "/{id}/addresses")
+    public List<AddressesRest> getUserAddresses(@PathVariable String id) {
+        List<AddressesRest> returnValue = new ArrayList<>();
+
+        List<AddressDTO> addressesDTO = addressesService.getAddresses(id);
+
+        if (addressesDTO != null && !addressesDTO.isEmpty()) {
+            Type listType = new TypeToken<List<AddressesRest>>() {}.getType();
+            ModelMapper modelMapper = new ModelMapper();
+            returnValue = modelMapper.map(addressesDTO, listType);
         }
 
         return returnValue;
