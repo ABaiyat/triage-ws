@@ -1,7 +1,6 @@
-package com.abaiyat.triagews.shared.dto;
+package com.abaiyat.triagews.ui.model.response;
 
-public class AddressDTO {
-    private String id;
+public class AddressesRest {
     private String addressId;
     private String city;
     private String country;
@@ -15,14 +14,6 @@ public class AddressDTO {
 
     public void setAddressId(String addressId) {
         this.addressId = addressId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getCity() {
